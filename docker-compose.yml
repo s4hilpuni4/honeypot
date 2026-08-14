@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  aegis-honeypot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aegis-honeypot-service
+    # Map host standard ports (22, 80) to container non-root ports (2222, 8080)
+    ports:
+      - "22:2222"
+      - "80:8080"
+    volumes:
+      # Mount host folder to capture persistent JSON logs
+      - ./logs:/var/log/honeypot
+    # Enforce service restart policies
+    restart: unless-stopped
+    # Apply standard container hardening
+    security_opt:
+      - no-new-privileges:true
+    # Drop standard capabilities for enhanced containment
+    cap_drop:
+      - ALL

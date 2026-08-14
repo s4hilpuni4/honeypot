@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aegis | Honeypot Intrusion Detection System</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Custom Styling -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+  <!-- Cyber Background Grid/Effects -->
+  <div class="cyber-grid"></div>
+  <div class="cyber-glow-orb-1"></div>
+  <div class="cyber-glow-orb-2"></div>
+
+  <div class="app-container">
+    
+    <!-- HEADER BAR -->
+    <header class="app-header">
+      <div class="header-logo">
+        <div class="logo-icon-wrapper">
+          <i class="fa-solid fa-shield-halved logo-icon"></i>
+          <span class="logo-pulse"></span>
+        </div>
+        <div class="logo-text">
+          <h1>AEGIS HIDS</h1>
+          <span class="logo-subtitle">Honeypot Intrusion Detection System</span>
+        </div>
+      </div>
+
+      <!-- Live Counters -->
+      <div class="header-stats">
+        <div class="stat-badge">
+          <span class="stat-label">SYSTEM STATE</span>
+          <span id="system-state-value" class="stat-value text-safe">SECURE</span>
+        </div>
+        <div class="stat-badge">
+          <span class="stat-label">TOTAL DETECTED</span>
+          <span id="stat-total-blocked" class="stat-value text-neon-red">0</span>
+        </div>
+        <div class="stat-badge">
+          <span class="stat-label">ACTIVE SESSIONS</span>
+          <span id="stat-active-sessions" class="stat-value text-cyan">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN BODY GRID -->
+    <main class="dashboard-grid">
+      
+      <!-- LEFT COLUMN: CONTROLS & CHARTS -->
+      <section class="left-panel flex-col gap-4">
+        
+        <!-- SERVICE CONTROLS CARD -->
+        <div class="glass-card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-network-wired header-icon text-cyan"></i>HONEYPOT CONTROLS</h3>
+            <span class="glow-dot cyan-glow"></span>
+          </div>
+          <div class="card-body controls-list">
+            
+            <div class="control-row">
+              <div class="service-meta">
+                <span class="service-name">HTTP Honeypot</span>
+                <span class="service-port">PORT 8080</span>
+              </div>
+              <div class="toggle-switch-wrapper">
+                <span id="status-HTTP" class="service-status text-green">ONLINE</span>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-HTTP" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="control-row">
+              <div class="service-meta">
+                <span class="service-name">SSH Honeypot</span>
+                <span class="service-port">PORT 2222</span>
+              </div>
+              <div class="toggle-switch-wrapper">
+                <span id="status-SSH" class="service-status text-green">ONLINE</span>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-SSH" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="control-row">
+              <div class="service-meta">
+                <span class="service-name">FTP Honeypot</span>
+                <span class="service-port">PORT 2121</span>
+              </div>
+              <div class="toggle-switch-wrapper">
+                <span id="status-FTP" class="service-status text-green">ONLINE</span>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-FTP" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- CHARTS GRID -->
+        <div class="glass-card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-chart-line header-icon text-pink"></i>ATTACK TRENDS</h3>
+          </div>
+          <div class="card-body chart-container">
+            <canvas id="trendChart"></canvas>
+          </div>
+        </div>
+
+        <div class="grid-2-col gap-4">
+          <div class="glass-card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-chart-pie header-icon text-yellow"></i>TARGET DISTRIBUTION</h3>
+            </div>
+            <div class="card-body chart-container-small">
+              <canvas id="distributionChart"></canvas>
+            </div>
+          </div>
+          <div class="glass-card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-circle-exclamation header-icon text-orange"></i>SEVERITY RATIO</h3>
+            </div>
+            <div class="card-body chart-container-small">
+              <canvas id="severityChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT COLUMN: LIVE ALERT FEED -->
+      <section class="right-panel flex-col gap-4">
+        
+        <!-- ALERT FEED CARD -->
+        <div class="glass-card flex-grow flex-col overflow-hidden">
+          <div class="card-header flex-row justify-between align-center">
+            <div class="flex-row align-center">
+              <i class="fa-solid fa-circle-nodes header-icon text-neon-red pulsing-icon"></i>
+              <h3>LIVE ATTACK TELEMETRY</h3>
+            </div>
+            <div class="header-actions">
+              <button id="btn-audio-toggle" class="icon-btn" title="Toggle Sound">
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+              <button id="btn-clear-logs" class="clear-btn">
+                <i class="fa-solid fa-trash-can"></i> CLEAR LOGS
+              </button>
+            </div>
+          </div>
+          
+          <div class="card-body overflow-y-auto flex-grow table-container">
+            <table class="alert-table">
+              <thead>
+                <tr>
+                  <th>TIMESTAMP</th>
+                  <th>SERVICE</th>
+                  <th>SOURCE IP</th>
+                  <th>LOCATION</th>
+                  <th>ATTACK TYPE</th>
+                  <th>SEVERITY</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="alerts-tbody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MOCK CYBER SECURITY TERMINAL LOG -->
+        <div class="glass-card terminal-card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-terminal header-icon text-green"></i>AEGIS LIVE MONITOR SHELL</h3>
+            <span class="terminal-dots"></span>
+          </div>
+          <div class="card-body terminal-body" id="terminal-output">
+            <div class="terminal-line text-green">[SYSTEM] Initialization complete. Aegis kernel active...</div>
+            <div class="terminal-line text-green">[SYSTEM] Listening on honeypot ports: 8080 (HTTP), 2222 (SSH), 2121 (FTP)...</div>
+            <div class="terminal-line text-dim">[INFO] Waiting for incoming intrusions...</div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ATTACK DETAILS MODAL -->
+  <div id="details-modal" class="modal-overlay hidden">
+    <div class="modal-card glass-card">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-bug text-neon-red"></i> INTRUSION DETAILS</h2>
+        <button id="close-modal-btn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="grid-2-col gap-4 margin-bottom-4">
+          <div class="detail-field">
+            <span class="field-label">Timestamp</span>
+            <span id="modal-timestamp" class="field-value"></span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Service & Port</span>
+            <span id="modal-service" class="field-value"></span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Attacker IP</span>
+            <span id="modal-ip" class="field-value"></span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Geolocation</span>
+            <span id="modal-location" class="field-value"></span>
+          </div>
+        </div>
+        
+        <div class="detail-field margin-bottom-4">
+          <span class="field-label">Attack Signature Type</span>
+          <span id="modal-type" class="field-value severity-badge font-bold"></span>
+        </div>
+
+        <div class="detail-field">
+          <span class="field-label">Captured Payload & Request Data</span>
+          <pre class="payload-box" id="modal-payload"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
