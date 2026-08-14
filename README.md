@@ -1,4 +1,4 @@
-# Aegis | Honeypot-Based Intrusion Detection System (HIDS)
+#  Honeypot-Based Intrusion Detection System (HIDS)
 
 Aegis is an interactive, high-fidelity **Honeypot-Based Intrusion Detection System (HIDS)**. It simulates common vulnerable network service interfaces (SSH, FTP, HTTP) to lure port scanners and scripts, parses intrusion attempts in real-time, maps attackers' behaviors to MITRE ATT&CK techniques, and displays logs in a real-time web command dashboard.
 
